@@ -23,7 +23,7 @@ legacy assembly name is **not** the current gameplay stage or dimension.
 | Subsequent spawns | Every 2.5 s | `Game3D.cs` |
 | Enemy progression | Chasers while kills < 4; Strikers from 4 onward | `Game3D.cs` |
 | Player max health | 100 HP | `Player3D.cs` |
-| Player movement | 7 world units/s | `Player3D.cs` |
+| Player movement | 8.5 world units/s | `Player3D.cs` |
 | Player firing rate | 5 shots/s (0.2 s apart) | `Player3D.cs` |
 | Player damage immunity | 0.6 s after taking damage | `Player3D.cs` |
 | Player bullet | 14 units/s, 24 damage, 2 s lifetime | `Game3D.cs`, `Bullet3D.cs` |
@@ -32,7 +32,7 @@ legacy assembly name is **not** the current gameplay stage or dimension.
 | Chaser stopping distance | 1.0 world unit | `ChaserEnemy3D.cs` |
 | Striker | 72 HP, 3.2 units/s, 22 contact damage, 180 score | `StrikerEnemy3D.cs` |
 | Striker preferred distance | 4.5–6.5 world units | `StrikerEnemy3D.cs` |
-| Striker fire | First at 1.0 s, then every 1.6 s if within 12 units | `StrikerEnemy3D.cs` |
+| Striker fire | First at 1.0 s, then every 1.2 s if within 12 units | `StrikerEnemy3D.cs` |
 | Enemy contact | Up to 1 hit per 0.6 s within 1.1 units | `Enemy3D.cs` |
 
 **Engine vs user code:** `Node3D`, `CharacterBody3D`, `Vector3`,
@@ -41,6 +41,11 @@ legacy assembly name is **not** the current gameplay stage or dimension.
 and win/lose conditions are **our own design**.
 
 ## Week 8 GitHub collaboration
+
+The two improvements below are completed on separate feature branches and
+merged into `main` with explicit merge commits. See [PROJECT_PLAN.md](PROJECT_PLAN.md)
+for the completed plan and verification results. The commits use one account;
+the branch names record tasks, not different student identities.
 
 **Student A**: edit `Scripts3D/StrikerEnemy3D.cs` — change the shooting
 interval from `1.6f` to `1.2f`; also update the corresponding comment.
