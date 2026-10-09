@@ -1,6 +1,6 @@
 // TEACHING GUIDE: Game3D is OUR game coordinator; Node3D and PackedScene are GODOT.
 // GODOT API: _Ready, _PhysicsProcess, GD.Load, GetNode, Instantiate, AddChild.
-// OUR RULES: first spawn at 1.5 s, then every 2.5 s; win after 10 kills;
+// OUR RULES: first spawn at 1.5 s, then every 2.5 s; survive 60 seconds to win;
 // first four kills unlock Strikers for all subsequent spawns; score depends on enemy type.
 // WORLD UNITS: speeds are Godot 3D units per second, not pixels per second.
 
@@ -9,8 +9,12 @@ using System;
 
 public partial class Game3D : Node3D
 {
-	// OUR victory condition: the player must defeat 10 enemies.
-	private const int TargetKills = 10;
+	// OUR victory condition: stay alive for 60 seconds of gameplay.
+	private const double SurvivalDuration = 60.0;
+
+	private double _survivalTime;
+
+	private int _lastReportedSecond;
 
 	private readonly RandomNumberGenerator _rng =
 		new();
@@ -76,18 +80,33 @@ public partial class Game3D : Node3D
 			return;
 		}
 
-		float delta = Math.Min(
-			(float)deltaValue,
-			0.033f);
+		// Use the full elapsed time so long physics steps do not slow the clock.
+		_survivalTime += deltaValue;
 
-		_spawnTimer -= delta;
+		if (_survivalTime >= SurvivalDuration)
+		{
+			_running = false;
+			_player.Active = false;
+			ClearEntities();
+			GD.Print("VICTORY: Survived 60 seconds!");
+			return;
+		}
 
-		if (_spawnTimer <= 0f)
+		int elapsedSecond = (int)_survivalTime;
+		if (elapsedSecond > _lastReportedSecond)
+		{
+			_lastReportedSecond = elapsedSecond;
+			GD.Print($"Survival: {elapsedSecond}/60 seconds | Score: {_score}");
+		}
+
+		_spawnTimer -= (float)deltaValue;
+
+		while (_spawnTimer <= 0f)
 		{
 			SpawnEnemy();
 
 			// OUR spawning interval: one enemy every 2.5 seconds.
-			_spawnTimer = 2.5f;
+			_spawnTimer += 2.5f;
 		}
 	}
 
@@ -98,6 +117,8 @@ public partial class Game3D : Node3D
 		_kills = 0;
 
 		_score = 0;
+		_survivalTime = 0.0;
+		_lastReportedSecond = 0;
 
 		// OUR opening delay: spawn first enemy 1.5 seconds after game start.
 		_spawnTimer = 1.5f;
@@ -106,6 +127,8 @@ public partial class Game3D : Node3D
 
 		_player.ResetPlayer(
 			new Vector3(0f, 0.5f, 0f));
+
+		GD.Print("Survive for 60 seconds. Enemies keep spawning until the game ends.");
 	}
 
 	private void SpawnEnemy()
@@ -205,6 +228,11 @@ public partial class Game3D : Node3D
 		float speed,
 		float damage)
 	{
+		if (!_running)
+		{
+			return;
+		}
+
 		Bullet3D bullet =
 			_bulletScene.Instantiate<Bullet3D>();
 
@@ -232,18 +260,7 @@ public partial class Game3D : Node3D
 
 		_score += points;
 
-		GD.Print(
-			$"Kills: {_kills}/{TargetKills}"
-			+ $" | Score: {_score}");
-
-		if (_kills >= TargetKills)
-		{
-			_running = false;
-
-			_player.Active = false;
-
-			GD.Print("VICTORY");
-		}
+		// Kills still affect enemy progression and score, but never trigger victory.
 	}
 
 	private void EndWithDefeat()
@@ -254,8 +271,10 @@ public partial class Game3D : Node3D
 		}
 
 		_running = false;
+		_player.Active = false;
+		ClearEntities();
 
-		GD.Print("GAME OVER!!!!");
+		GD.Print($"GAME OVER: Survived {Math.Min(_survivalTime, SurvivalDuration):F1} seconds.");
 	}
 
 	private void ClearEntities()

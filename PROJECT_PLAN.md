@@ -14,12 +14,14 @@ changes clearly. Make the player faster and make the Striker attack more often.
 
 The player change is in `Scripts3D/Player3D.cs`. The Striker change is in
 `Scripts3D/StrikerEnemy3D.cs`. Comments and the README now match the new values.
-The Striker's first shot delay remains 1 second. The target remains 10 kills.
+The Striker's first shot delay remains 1 second. The initial version targeted
+10 kills; the publisher iteration below replaces this with 60-second survival.
 
 ## Branch and merge record
 
 Two feature branches were created from the original demo commit `9a38085`.
-Including `main`, the repository has three branches.
+Including `main`, this initial stage used three branches. The publisher
+iteration adds `feature/survive-60-seconds`.
 
 1. `d10a954`: change player speed to 8.5 units/s.
 2. `8814a3d`: change the Striker shooting interval to 1.2 seconds.
@@ -48,7 +50,28 @@ and both merge into main. The final source contains both new values.
 A full interactive playthrough has not been completed. Before presenting,
 open the project in Godot 4.7.2 .NET, build, and run `Scenes3D/Main3D.tscn`.
 Use WASD to check movement and mouse aiming/shooting. Reach four kills to
-observe Strikers. Check victory at 10 kills and defeat when player HP reaches 0.
+observe Strikers. Check victory after surviving 60 seconds and defeat when player HP reaches 0.
+
+## Publisher iteration: survive for 60 seconds
+
+The publisher wants survival itself to be the challenge. The player now wins
+after 60 seconds alive, with no required number of kills. Enemies spawn after
+1.5 seconds and then every 2.5 seconds until victory or defeat. Kills still
+add score and unlock Strikers after four kills, but cannot end the round.
+
+`Game3D` owns the survival clock and win condition. The clock uses full physics
+delta time and resets at the start of each round. The output panel reports
+survival progress once per second. Ending the round stops the clock, disables
+the player and clears enemies and bullets.
+
+This iteration is implemented on `feature/survive-60-seconds`. The remaining
+requirement is reserved for the other student and has not been specified yet.
+
+Validation: the C# build passes with zero errors. Automated Godot checks pass
+for the first spawn, repeated spawning, no victory at ten kills, the 60-second
+victory boundary, clock reset, long-step timing, and defeat before the deadline.
+These checks exercise the loaded game scene with controlled time steps; they
+do not replace an interactive playthrough.
 
 ## Submission
 
