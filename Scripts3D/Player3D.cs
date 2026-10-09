@@ -1,7 +1,7 @@
 // TEACHING GUIDE: Player3D is OUR player model; CharacterBody3D is GODOT.
 // GODOT API: [Signal], _Input, _PhysicsProcess, Input.GetVector, MoveAndSlide,
 // Camera3D.ProjectRayOrigin/ProjectRayNormal, LookAt, EmitSignal.
-// OUR RULES: 100 health, 7 world units/second, up to 5 shots/second,
+// OUR RULES: 100 health, 8.5 world units/second, up to 5 shots/second,
 // 0.6-second damage immunity after being hit; WASD movement and mouse aiming/shooting.
 
 using Godot;
@@ -20,7 +20,7 @@ public partial class Player3D : CharacterBody3D
 
 	// OUR PLAYER STATS: max HP, movement speed (units/s), firing rate (shots/s).
 	private const float MaxHealth = 100f;
-	private const float MoveSpeed = 7f;
+	private const float MoveSpeed = 8.5f;
 	private const float FireRate = 5f;
 
 	private float _fireCooldown;
