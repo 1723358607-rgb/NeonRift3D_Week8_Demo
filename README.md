@@ -8,7 +8,8 @@ Godot APIs, and GitHub collaboration. All source-code comments are in English.
 1. Open this directory as a project in a compatible Godot 4 .NET editor.
 2. Build the C# project in Godot, then run `Scenes3D/Main3D.tscn`.
 3. Use **W/A/S/D** to move; **move the mouse** to aim; hold **left mouse button** to shoot.
-4. Observe kills, score, victory, and defeat messages in the **Godot Output panel**.
+4. Survive **60 seconds** to win. Observe survival time, score, victory, and defeat
+   messages in the **Godot Output panel**. Enemies keep spawning during the round.
 
 The project targets `Godot.NET.Sdk/4.7.2` and `net8.0` as in the supplied
 project. The assembly is named `NeonRiftStage1` for compatibility; this
@@ -18,7 +19,7 @@ legacy assembly name is **not** the current gameplay stage or dimension.
 
 | Rule | Value | File |
 | --- | --- | --- |
-| Victory | Defeat 10 enemies | `Game3D.cs` |
+| Victory | Stay alive for 60 seconds | `Game3D.cs` |
 | Initial enemy spawn | 1.5 s after start | `Game3D.cs` |
 | Subsequent spawns | Every 2.5 s | `Game3D.cs` |
 | Enemy progression | Chasers while kills < 4; Strikers from 4 onward | `Game3D.cs` |
@@ -56,7 +57,7 @@ from `7f` to `8.5f`; also update the corresponding comment.
 These independent edits are normally **mergeable** because they modify
 different files. To intentionally demonstrate a **merge conflict**, let
 both students branch from the same commit and change
-`Game3D.cs`'s `TargetKills = 10` line to different values. Merge one
+`Game3D.cs`'s `SurvivalDuration = 60.0` line to different values. Merge one
 branch into `main` first, then merge the other **without first reconciling
 those conflicting changes**; Git may require manual resolution. The
 existence of two pull requests alone does not necessarily create a conflict.
