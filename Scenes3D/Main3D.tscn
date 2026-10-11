@@ -104,3 +104,24 @@ current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=659561289]
 transform = Transform3D(0.8660254, 0.38302222, -0.32139382, 0, 0.64278764, 0.76604444, 0.5, -0.66341394, 0.5566704, 0, 0, 0)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1983861964]
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=357828908]
+offset_left = 400.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 87.0
+theme_override_font_sizes/font_size = 32
+text = "Time Left: 60"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResultLabel" type="Label" parent="HUD" unique_id=1334401293]
+offset_left = 400.0
+offset_top = 300.0
+offset_right = 880.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+vertical_alignment = 1

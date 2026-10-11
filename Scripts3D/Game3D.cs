@@ -29,6 +29,10 @@ public partial class Game3D : Node3D
 
 	private Player3D _player = null!;
 
+	private Label _timerLabel = null!;
+
+	private Label _resultLabel = null!;
+
 	private float _spawnTimer;
 
 	private int _kills;
@@ -62,6 +66,12 @@ public partial class Game3D : Node3D
 		_player =
 			GetNode<Player3D>("Player");
 
+		_timerLabel =
+			GetNode<Label>("HUD/TimerLabel");
+
+		_resultLabel =
+			GetNode<Label>("HUD/ResultLabel");
+
 		// OUR signal-based design: actors request actions; Game3D owns spawning.
 		_player.ShotRequested +=
 			SpawnPlayerBullet;
@@ -82,12 +92,14 @@ public partial class Game3D : Node3D
 
 		// Use the full elapsed time so long physics steps do not slow the clock.
 		_survivalTime += deltaValue;
+		UpdateTimerDisplay();
 
 		if (_survivalTime >= SurvivalDuration)
 		{
 			_running = false;
 			_player.Active = false;
 			ClearEntities();
+			_resultLabel.Text = "YOU WIN!";
 			GD.Print("VICTORY: Survived 60 seconds!");
 			return;
 		}
@@ -119,6 +131,9 @@ public partial class Game3D : Node3D
 		_score = 0;
 		_survivalTime = 0.0;
 		_lastReportedSecond = 0;
+
+		_resultLabel.Text = "";
+		UpdateTimerDisplay();
 
 		// OUR opening delay: spawn first enemy 1.5 seconds after game start.
 		_spawnTimer = 1.5f;
@@ -274,7 +289,23 @@ public partial class Game3D : Node3D
 		_player.Active = false;
 		ClearEntities();
 
-		GD.Print($"GAME OVER: Survived {Math.Min(_survivalTime, SurvivalDuration):F1} seconds.");
+		_resultLabel.Text = "GAME OVER";
+
+		GD.Print(
+			$"GAME OVER: Survived "
+			+ $"{Math.Min(_survivalTime, SurvivalDuration):F1} seconds.");
+	}
+
+	private void UpdateTimerDisplay()
+	{
+		int remainingSeconds =
+			(int)Math.Ceiling(
+				Math.Max(
+					0.0,
+					SurvivalDuration - _survivalTime));
+
+		_timerLabel.Text =
+			$"Time Left: {remainingSeconds}";
 	}
 
 	private void ClearEntities()
